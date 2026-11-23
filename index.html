@@ -496,7 +496,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
     gsap.ticker.lagSmoothing(0);
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
       const t = $(a.getAttribute('href')); if (!t) return;
-      e.preventDefault(); lenis.scrollTo(t, { offset: 0, duration: 1.4 });
+      e.preventDefault(); lenis.scrollTo(t, { offset: 0, duration: 1.4, force: true });
     }));
   }
 
@@ -510,7 +510,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
     typing = setInterval(() => { cmdEl.textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(typing); }, 28);
   }
   $$('[data-cmd]').forEach(sec => ScrollTrigger.create({
-    trigger: sec, start: 'top 55%', end: 'bottom 55%',
+    trigger: sec, start: 'top 55%', end: 'bottom 55%', refreshPriority: -1,   /* se calcula después de los pines */
     onEnter: () => cmd(sec.dataset.cmd), onEnterBack: () => cmd(sec.dataset.cmd)
   }));
 
@@ -718,6 +718,76 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
       r.appendChild(g);
     });
   });
+
+  /* ---- Scroll por hitos: cada gesto avanza exactamente un hito ---- */
+  if (lenis) {
+    const planST = ScrollTrigger.getAll().find(s => s.pin && s.trigger && s.trigger.id === 'plano');
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    let stops = [0], busy = false, armed = true, lastWheel = 0, lastDelta = 0, touchY = null;
+
+    /* Hitos: inicio, las tres capas del plano, servicios (y su final si no cabe), notas y contacto */
+    const build = () => {
+      const vh = innerHeight, max = document.documentElement.scrollHeight - vh, s = [0];
+      if (planST) [.34, .64, 1].forEach(p => s.push(planST.start + (planST.end - planST.start) * p));
+      ['#servicios', '#notas', '#contacto'].forEach(id => {
+        const el = $(id); if (!el) return;
+        const t = el.getBoundingClientRect().top + scrollY, extra = el.offsetHeight - vh;
+        s.push(t);
+        if (extra > vh * .15) { const n = Math.ceil(extra / (vh * .75)); for (let i = 1; i <= n; i++) s.push(t + extra * i / n); }
+      });
+      stops = s.map(v => Math.round(Math.min(max, Math.max(0, v)))).sort((a, b) => a - b)
+        .filter((v, i, a) => i === 0 || v - a[i - 1] > 40);
+      if (max - stops[stops.length - 1] < vh * .25) stops[stops.length - 1] = max;   /* el último hito llega hasta el pie */
+    };
+
+    const goTo = target => {
+      busy = true;
+      const d = Math.abs(target - scrollY);
+      lenis.scrollTo(target, { force: true, easing: ease, duration: Math.min(1.7, .9 + d / innerHeight * .25), onComplete: () => { busy = false; } });
+    };
+    const step = dir => {
+      build();   /* se recalcula en cada gesto: la altura cambia con fuentes, pines y tamaño de ventana */
+      const y = scrollY;
+      const t = dir > 0 ? stops.find(v => v > y + 4) : [...stops].reverse().find(v => v < y - 4);
+      if (t !== undefined) goTo(t);
+    };
+
+    lenis.stop();   /* Lenis deja de mover la página por su cuenta; solo nosotros la llevamos de hito en hito */
+
+    /* Rueda / trackpad: un gesto = un hito. La inercia del trackpad no cuenta como gesto nuevo. */
+    addEventListener('wheel', e => {
+      if (e.ctrlKey) return;
+      e.preventDefault();
+      const now = performance.now(), dy = Math.abs(e.deltaY);
+      if (!busy && (now - lastWheel > 160 || dy > lastDelta * 1.5 + 8)) armed = true;
+      lastWheel = now; lastDelta = dy;
+      if (busy || !armed || dy < 1) return;
+      armed = false; step(Math.sign(e.deltaY));
+    }, { passive: false });
+
+    /* Táctil: deslizar avanza o retrocede un hito */
+    addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+    addEventListener('touchmove', e => { if (e.cancelable) e.preventDefault(); }, { passive: false });
+    addEventListener('touchend', e => {
+      if (touchY === null) return;
+      const dy = touchY - e.changedTouches[0].clientY; touchY = null;
+      if (!busy && Math.abs(dy) > 40) step(Math.sign(dy));
+    }, { passive: true });
+
+    /* Teclado */
+    addEventListener('keydown', e => {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.target.closest?.('input,textarea,select,[contenteditable]')) return;
+      const k = e.key;
+      let dir = 0;
+      if (k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey)) dir = 1;
+      else if (k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey)) dir = -1;
+      else if (k === 'Home' || k === 'End') { e.preventDefault(); if (!busy) { build(); goTo(k === 'Home' ? 0 : stops[stops.length - 1]); } return; }
+      if (!dir || (k === ' ' && e.target.closest?.('button'))) return;
+      e.preventDefault();
+      if (!busy) step(dir);
+    });
+
+  }
 
   addEventListener('load', () => ScrollTrigger.refresh());
 })();
