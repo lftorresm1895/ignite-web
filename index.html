@@ -27,7 +27,6 @@
   --red:#ff5a4a;        /* capa fuerza */
   --yellow:#ffd23a;     /* energía */
   --grip:#4f8dff;       /* pinzamientos */
-  --bar:36px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
@@ -43,7 +42,7 @@ body{
   background-size:120px 120px,120px 120px,24px 24px,24px 24px;
   background-attachment:fixed;
   color:var(--line);font:300 17px/1.6 Jost,"Century Gothic",system-ui,sans-serif;
-  -webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:var(--bar)
+  -webkit-font-smoothing:antialiased;overflow-x:hidden
 }
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:1px dashed var(--grip);outline-offset:4px}
@@ -70,15 +69,6 @@ p{max-width:62ch}
 .ch b{position:absolute;width:12px;height:12px;border:1px solid var(--line);margin:-6px 0 0 -6px;transition:width .15s,height .15s,margin .15s,border-color .15s}
 .ch.hot b{width:22px;height:22px;margin:-11px 0 0 -11px;border-color:var(--yellow)}
 @media (pointer:fine){ body.cad,body.cad a,body.cad button{cursor:none} .ch{display:block} }
-
-/* ---------- Línea de comandos ---------- */
-.cmd{position:fixed;inset:auto 0 0;z-index:45;height:var(--bar);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 18px;background:rgba(17,23,31,.94);border-top:1px solid var(--faint);font-size:13.5px;font-weight:400;color:var(--dim)}
-.cmd .line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cmd .line em{font-style:normal;color:var(--line)}
-.cmd .caret{display:inline-block;width:7px;height:14px;background:var(--line);vertical-align:-2px;margin-left:3px;animation:caret 1s steps(1) infinite}
-@keyframes caret{50%{opacity:0}}
-.cmd .xyz{display:flex;gap:18px;font-variant-numeric:tabular-nums}
-.cmd .xyz span:last-child{color:var(--line);border:1px solid var(--faint);padding:1px 8px}
 
 /* ---------- Hero ---------- */
 .hero{min-height:100vh;min-height:100svh;display:grid;place-content:center;justify-items:center;position:relative;padding:96px 24px 80px}
@@ -111,7 +101,7 @@ p{max-width:62ch}
 
 /* ---------- Plano ---------- */
 .plan{position:relative;height:100vh;height:100svh;overflow:hidden}
-.plan-in{height:100%;display:grid;grid-template-columns:minmax(300px,0.8fr) 1.2fr;gap:clamp(24px,4vw,64px);align-items:center;width:min(1320px,100% - 48px);margin:0 auto;padding:84px 0 calc(var(--bar) + 28px)}
+.plan-in{height:100%;display:grid;grid-template-columns:minmax(300px,0.8fr) 1.2fr;gap:clamp(24px,4vw,64px);align-items:center;width:min(1320px,100% - 48px);margin:0 auto;padding:84px 0 28px}
 .plan-copy h2{margin-bottom:28px}
 .steps{position:relative;min-height:9.5em}
 .stepx{position:absolute;inset:0 0 auto;opacity:0;transform:translateY(10px)}
@@ -212,15 +202,11 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
 @media (max-width:640px){
   .top{height:56px;padding:0 16px}
   .top nav a:not(.wa){display:none}
-  .cmd .xyz{display:none}
   .ucs{display:none}
   .logo-big{width:92vw}
   .dimtxt{display:none}
   .hero-sub{display:block;text-align:center;color:var(--dim);font-size:15px;margin:18px auto 0;max-width:30ch;opacity:0}
   body{font-size:16px}
-}
-@media (prefers-reduced-motion:reduce){
-  .cmd .caret{animation:none}
 }
 </style>
 </head>
@@ -244,7 +230,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
 
 <main>
   <!-- ============ HERO ============ -->
-  <section class="hero" id="inicio" data-cmd="IGNITE">
+  <section class="hero" id="inicio">
     <div class="veil" aria-hidden="true"></div>
     <div class="wave" aria-hidden="true"></div>
     <div class="shake"><div class="cam">
@@ -284,7 +270,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
   </section>
 
   <!-- ============ PLANO ============ -->
-  <section class="plan" id="plano" data-cmd="TRAZAR plano eléctrico">
+  <section class="plan" id="plano">
     <div class="plan-in">
       <div class="plan-copy">
         <h2>Cada proyecto empieza en un plano.</h2>
@@ -397,7 +383,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
   </section>
 
   <!-- ============ SERVICIOS ============ -->
-  <section class="svc" id="servicios" data-cmd="CAPAS de servicio">
+  <section class="svc" id="servicios">
     <div class="wrap">
       <div class="svc-head">
         <h2>Seis sistemas, un solo diseño.</h2>
@@ -421,7 +407,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
   </section>
 
   <!-- ============ NOTAS ============ -->
-  <section class="notes" id="notas" data-cmd="NOTAS generales">
+  <section class="notes" id="notas">
     <div class="wrap notes-in">
       <div>
         <h2>Creemos que cada proyecto tiene vida.</h2>
@@ -440,7 +426,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
   </section>
 
   <!-- ============ CONTACTO ============ -->
-  <section class="contact" id="contacto" data-cmd="CAJETÍN de contacto">
+  <section class="contact" id="contacto">
     <div class="wrap contact-in">
       <div>
         <h2>¿Tienes un proyecto? Lo dibujamos contigo.</h2>
@@ -470,11 +456,6 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
   </section>
 </main>
 
-<div class="cmd" aria-hidden="true">
-  <div class="line">Comando: <em id="cmdtxt"></em><span class="caret"></span></div>
-  <div class="xyz"><span id="coords">0.0000, 0.0000, 0.0000</span><span>Modelo</span></div>
-</div>
-
 <script src="assets/js/gsap.min.js"></script>
 <script src="assets/js/ScrollTrigger.min.js"></script>
 <script src="assets/js/lenis.min.js"></script>
@@ -500,29 +481,13 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
     }));
   }
 
-  /* ---- Línea de comandos ---- */
-  const cmdEl = $('#cmdtxt');
-  let typing;
-  function cmd(text) {
-    clearInterval(typing);
-    if (reduce) { cmdEl.textContent = text; return; }
-    let i = 0; cmdEl.textContent = '';
-    typing = setInterval(() => { cmdEl.textContent = text.slice(0, ++i); if (i >= text.length) clearInterval(typing); }, 28);
-  }
-  $$('[data-cmd]').forEach(sec => ScrollTrigger.create({
-    trigger: sec, start: 'top 55%', end: 'bottom 55%', refreshPriority: -1,   /* se calcula después de los pines */
-    onEnter: () => cmd(sec.dataset.cmd), onEnterBack: () => cmd(sec.dataset.cmd)
-  }));
-
-  /* ---- Mira y coordenadas ---- */
-  const ch = $('.ch'), hx = $('.ch .h'), vx = $('.ch .v'), pb = $('.ch b'), co = $('#coords');
+  /* ---- Mira (cursor de CAD) ---- */
+  const ch = $('.ch'), hx = $('.ch .h'), vx = $('.ch .v'), pb = $('.ch b');
   if (matchMedia('(pointer:fine)').matches) {
     addEventListener('pointermove', e => {
       hx.style.transform = `translateY(${e.clientY}px)`;
       vx.style.transform = `translateX(${e.clientX}px)`;
       pb.style.left = e.clientX + 'px'; pb.style.top = e.clientY + 'px';
-      const X = e.clientX + scrollX, Y = document.documentElement.scrollHeight - (e.clientY + scrollY);
-      co.textContent = `${X.toFixed(4)}, ${Y.toFixed(4)}, 0.0000`;
       ch.classList.toggle('hot', !!e.target.closest('a,button,.row'));
     }, { passive: true });
     document.addEventListener('pointerleave', () => ch.style.opacity = 0);
@@ -631,18 +596,14 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
     gsap.set(tagClip, { attr: { width: 3300 } });
     gsap.set([veil, xl], { opacity: 0 });
     gsap.set(boltGlow, { opacity: .4 });
-    cmd('IGNITE');
   } else {
     xl.forEach(prep); prep(lt); prep(boltEdge);
     gsap.set(cam, { scale: .9 });
     const tl = gsap.timeline({ delay: .25 });
     tl.to(veil, { opacity: .45, duration: 1.4, ease: 'power1.out' }, 0)
-      .call(() => cmd('XLÍNEA'), null, 0)
       .to(xl, { strokeDashoffset: 0, duration: 1, ease: 'power2.out', stagger: .07 }, .1)
       .to(cam, { scale: 1, duration: 2.9, ease: 'power1.inOut' }, 0)
-      .call(() => cmd('LÍNEA'), null, .9)
       .to(lt, { strokeDashoffset: 0, duration: 1.5, ease: 'power3.inOut' }, .8)
-      .call(() => cmd('ENCENDER'), null, 2.2)
       .set(boltEdge, { opacity: 1 }, 2.25)
       .to(boltEdge, { strokeDashoffset: 0, duration: .35, ease: 'power2.in' }, 2.25)
       .call(() => fx.spark(boltCenter(), 14, .5), null, 2.45)
@@ -663,7 +624,7 @@ footer{padding:26px 0 34px;color:var(--dim);font-size:13.5px}
       .set(tag, { opacity: 1 }, 'impact+=.4')
       .to(tagClip, { attr: { width: 3300 }, duration: 1.1, ease: 'power2.inOut' }, 'impact+=.4')
       .to([dim, sub], { opacity: 1, duration: .8 }, 'impact+=.9')
-      .call(() => { cmd('Desplázate para trazar el plano'); idle(); }, null, 'impact+=1.5');
+      .call(idle, null, 'impact+=1.5');
 
     /* Salida: la cámara entra por el rayo */
     gsap.timeline({ scrollTrigger: { trigger: hero, start: 'top top', end: '+=90%', pin: true, scrub: .6 } })
